@@ -1,9 +1,9 @@
-POST http://localhost:8080/events
+PUT http://localhost:8080/events/1
 content-type: application/json
 
 {
-   "name": "Test event",
-   "description": "This is a test event",
+   "name": "Test event updated",
+   "description": "This is a test event, after an update",
    "location": "Test location",
    "dateTime": "2025-01-01T15:30:00.000Z"
 }
