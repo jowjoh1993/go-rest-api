@@ -18,14 +18,7 @@ func (u User) Save() error {
 
 	defer stmt.Close()
 
-	result, err := stmt.Exec(u.Email, u.Password)
+	_, err = stmt.Exec(u.Email, u.Password)
 
-	if err != nil {
-		return err
-	}
-
-	userId, err := result.LastInsertId()
-
-	u.ID = userId
 	return err
 }
