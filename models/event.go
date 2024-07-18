@@ -1,3 +1,6 @@
+// The models package contains type definitions for various data objects,
+// as well as methods for performing CRUD operations on tables in the
+// SQL database.
 package models
 
 import (
@@ -6,6 +9,7 @@ import (
 	"example.com/rest-api/db"
 )
 
+// Event type groups data together to describe a single event
 type Event struct {
 	ID          int64
 	Name        string    `binding:"required"`
@@ -15,6 +19,7 @@ type Event struct {
 	UserID      int
 }
 
+// Saves an event by adding a row to the events table in the database
 func (e Event) Save() error {
 	query := `
 	INSERT INTO events(name, description, location, dateTime, user_id) 
@@ -34,6 +39,8 @@ func (e Event) Save() error {
 	return err
 }
 
+// Fetches all rows from the 'events' table in the database, and returns
+// a slice containing Event objects
 func GetAllEvents() ([]Event, error) {
 	query := "SELECT * FROM events"
 	rows, err := db.DB.Query(query)
@@ -57,6 +64,8 @@ func GetAllEvents() ([]Event, error) {
 	return events, nil
 }
 
+// Given an event ID, fetch the corresponding event from the 'events'
+// table in the database
 func GetEventByID(id int64) (*Event, error) {
 	query := "SELECT * FROM events WHERE id = ?"
 	row := db.DB.QueryRow(query, id)
@@ -70,6 +79,7 @@ func GetEventByID(id int64) (*Event, error) {
 	return &event, nil
 }
 
+// Given an event, overwrite the existing event in the database having the same ID
 func (event Event) Update() error {
 	query := `
 	UPDATE events
@@ -88,6 +98,7 @@ func (event Event) Update() error {
 	return err
 }
 
+// Delete the specified event from the database
 func (event Event) Delete() error {
 	query := "DELETE FROM events WHERE id = ?"
 
