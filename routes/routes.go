@@ -1,21 +1,26 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"example.com/rest-api/middlewares"
+	"github.com/gin-gonic/gin"
+)
 
 func RegisterRoutes(server *gin.Engine) {
-
-	//------------------------- /events --------------------------------//
 	server.GET("/events", getEvents)
 	server.GET("/events/:id", getEvent)
-	server.POST("/events", createEvent)       // only owner
-	server.PUT("/events/:id", updateEvent)    // only owner
-	server.DELETE("/events/:id", deleteEvent) // only owner
 
-	//------------------------- /signup --------------------------------//
+	// Multiple handlers can be specified, and they will be executed
+	// sequentially from left to right
+	// 	server.POST("/events", middlewares.Authenticate, createEvent)
+
+	// Alternatively, you can group routes together
+	authenticated := server.Group("/")
+	authenticated.Use(middlewares.Authenticate) // always run middleware for endpoints in the group
+	authenticated.POST("/events", createEvent)
+	authenticated.PUT("/events/:id", updateEvent)
+	authenticated.DELETE("/events/:id", deleteEvent)
+
 	server.POST("/signup", signup)
-
-	//------------------------- /login ---------------------------------//
 	server.POST("/login", login)
-
 	server.GET("/users", getUsers)
 }
